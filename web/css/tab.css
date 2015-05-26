@@ -1,0 +1,114 @@
+/*
+********
+** Tab by Antoine Demailly
+****************************/
+
+/*
+** Tab - Menu 
+**********/
+
+.tab-menu {
+	margin: auto;
+	margin-bottom: 20px;
+	width: 304px;
+}
+
+.tab-link {
+	display: block;
+	float: left;
+	width: 100px;
+	padding-top: 10px; padding-bottom: 10px;
+
+	text-align: center;
+	cursor: pointer;
+	color: #2196F3;
+	font-family: Roboto;
+
+	border: 1px solid #2196F3;
+	background-color: transparent;
+	
+
+	transition: background-color 0.3s, color 0.3s;
+}
+
+
+.tab-link-active {
+	background-color: #2196F3;
+	color: white;
+}
+
+.tab-link-left {
+	border-radius: 2px 0px 0px 2px;
+}
+
+.tab-link-middle {
+	border-left: none; border-right: none;
+}
+
+.tab-link-right {
+	border-radius: 0px 2px 2px 0px;
+}
+
+
+
+/*
+** Tab - Content
+**********/
+
+.tab-content {
+	position: relative;
+	width: 80%;
+	/* Height définit par JS */
+	height: 0; 
+	overflow: hidden;
+
+	margin: auto;
+
+	background-color: transparent;
+}
+.tab-wrap {
+	position: absolute;
+	top: 0; left: 0;
+	width: 300%;
+	height: auto;
+	transition: transform 0.3s;
+}
+
+.tab-wrap-left {
+	transform: translateX(0);
+}
+
+.tab-wrap-middle {
+	transform: translateX(-33.333%);
+}
+
+.tab-wrap-right {
+	transform: translateX(-66.666%);
+}
+
+
+.tab {
+	float: left;
+	width: 33.333%;
+}
+
+
+
+.article-text {
+	font-size: 16px;
+	font-family: Roboto;
+	margin-bottom: 15px;
+}
+
+
+/*
+** Tab - Mobile
+**********/
+
+@media screen and (max-width: 500px) {
+	
+	.tab-link {
+		padding-top: 5px; padding-bottom: 5px;
+	}
+
+}

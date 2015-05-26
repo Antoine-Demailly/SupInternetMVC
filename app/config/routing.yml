@@ -1,2 +1,48 @@
+home:
+  path: home
+  controller: WebSite\Controller\HomeController:homeAction
 user_list:
-  controller: ControllerClassName:ActionName
+  path: user_list
+  controller: WebSite\Controller\UserController:listUserAction
+getuser:
+  path: getuser
+  controller: WebSite\Controller\UserController:getUser
+user_login:
+  path: user_login
+  controller: WebSite\Controller\UserController:loginUser
+user_new:
+  path: user_new
+  controller: WebSite\Controller\UserController:addUser
+updateuser:
+  path: updateuser
+  controller: WebSite\Controller\UserController:updateUser
+user_logout:
+  path: user_logout
+  controller: WebSite\Controller\UserController:logoutUser
+dashboard:
+  path: dashboard 
+  controller: WebSite\Controller\AdminController:dashboardAction
+clients:
+  path: clients
+  controller: WebSite\Controller\AdminController:customersAction
+sessions:
+  path: sessions
+  controller: WebSite\Controller\AdminController:sessionsAction
+trottinettes:
+  path: trottinettes
+  controller: WebSite\Controller\AdminController:scootersAction
+bornes:
+  path: bornes
+  controller: WebSite\Controller\AdminController:bornesAction
+maintenances:
+  path: maintenances
+  controller: WebSite\Controller\AdminController:maintenancesAction
+search:
+  path: recherche
+  controller: WebSite\Controller\SearchController:searchAjax
+scootersinbornes:
+  path: scootersinbornes
+  controller: WebSite\Controller\BornesController:scootersInBornes
+getscooters:
+  path: getscooters
+  controller: WebSite\Controller\ScootersController:getScooters

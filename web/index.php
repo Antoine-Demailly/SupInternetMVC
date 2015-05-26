@@ -1,42 +1,60 @@
 <?php
 
-/**
- * This is you FrontController, the only point of access to your webapp
- */
- 
- require __DIR__ . '/../vendor/autoload.php';
- 
+session_start();
 
-/**
- * Use Yaml components for load a config routing, $routes is in yaml app/config/routing.yml :
- *
- * Url will be /index.php?p=route_name
- *
- *
- */
-$routes = ...
+require __DIR__ . '/../vendor/autoload.php';
 
-//Thaks to p=, find the current route
-$current_route = ...
+use Symfony\Component\Yaml\Yaml;
+use WebSite\Model\Router;
 
-//ControllerClassName, end name is ...Controller
-$controller_class = ... ;
+// Get Config.yml And Routing.yml
+$config = Yaml::parse(file_get_contents(__DIR__.'/../app/config/config.yml'));
+$routing = Yaml::parse(file_get_contents(__DIR__.'/../app/config/routing.yml'));
 
-//ActionName, end name is ...Action
-$action_name = ...;
+// Init Router
+$router = new Router($config['router']['host'],$config['router']['prefixe'],$routing);
 
-$controller = new $controller_class();
 
 //$Request can by an object
 $request['request'] = &$_POST;
 $request['query'] = &$_GET;
-//...
+$request['session'] = &$_SESSION;
 
+
+// Get Controller And Action names
+$current_route_config = $router->match($request);
+if ($current_route_config === false) {
+	throw new Exception("Not Found", 404);
+}
+
+$controller = new $current_route_config['controller']($router, $config);
 //$response can be an object
-$response = $controller->$action_name($request);
+$response = $controller->$current_route_config['action']($request);
 
 
-/**
- * Use Twig !
- */
-require $response['view'];
+/** do a redirection here if $response['redirect_to'] exists **/
+if (is_array($response)) {
+	if (!empty($response['redirect_to'])) {
+	    header('Location: ' . $response['redirect_to']);
+	} elseif (!empty($response['html_view'])) {
+
+	    require __DIR__ . '/../src/' . $response['html_view'];
+
+	} elseif (!empty($response['twig_view'])) {
+
+		$loader = new Twig_Loader_Filesystem(__DIR__.'/src/WebSite/View');
+		$twig = new Twig_Environment($loader, array(
+		    'cache' => __DIR__ . '/../app/cache',
+		));
+
+		$template = $twig->loadTemplate($response['twig_view']);
+		$response['router'] = $router;
+		$template->render($response);
+
+	} elseif (isset($response['json'])) {
+		header('Content-type: application/json');
+		echo(json_encode($response['json']));
+	} else {
+	    throw new Exception('response object is not complet');
+	}
+}

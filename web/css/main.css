@@ -1,0 +1,551 @@
+@charset "UTF-8";
+
+/* fonts */
+
+@font-face {
+    font-family: Roboto;
+    src: url('../fonts/Roboto-Regular-webfont.eot');
+    src: url('../fonts/Roboto-Regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/Roboto-Regular-webfont.woff') format('woff'),
+         url('../fonts/Roboto-Regular-webfont.ttf') format('truetype'),
+         url('../fonts/Roboto-Regular-webfont.svg#robotoregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: Roboto;
+    src: url('../fonts/Roboto-Light-webfont.eot');
+    src: url('../fonts/Roboto-Light-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/Roboto-Light-webfont.woff') format('woff'),
+         url('../fonts/Roboto-Light-webfont.ttf') format('truetype'),
+         url('../fonts/Roboto-Light-webfont.svg#robotolight') format('svg');
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: Roboto;
+    src: url('../fonts/Roboto-Italic-webfont.eot');
+    src: url('../fonts/Roboto-Italic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/Roboto-Italic-webfont.woff') format('woff'),
+         url('../fonts/Roboto-Italic-webfont.ttf') format('truetype'),
+         url('../fonts/Roboto-Italic-webfont.svg#robotolight') format('svg');
+    font-weight: normal;
+    font-style: italic;
+}
+
+body {
+	background-color: #F9F9F9;
+}
+
+#map-canvas {
+	width: 100%;
+	height: 70vh;
+}
+
+.fog {
+	display: none;
+	position: fixed; top: 0; left: 0;
+	width: 100%;
+	height: 100vh;
+	background-color: rgba(0,0,0,0.70);
+
+	z-index: 800;
+}
+
+.editionMode {
+	position: fixed; top: 0; left: 50%;
+	margin-left: -500px;
+	margin-bottom: 20vh;
+	width: 1000px; min-height: 90vh;
+	
+	background-color: white;
+
+	z-index: 1000;
+
+	transform: translateY(100vh);
+	transition: all 0.5s;
+}
+
+.editionMode-open {
+	position: relative;
+	margin-bottom: 20vh;
+	transform: translateY(10vh);
+}
+
+.mode-absolute {
+	position: fixed;
+	width: 100%;
+}
+
+.flashbag {
+	position: fixed;
+	top: 85px; right: 20px;
+	color: black;
+	z-index: 300;
+	transform: translateX(200%);
+
+	transition: transform 0.5s;
+}
+
+.flashbag-open {
+	transform: translateX(0%);
+}
+
+.success, .error, .info, .alert {
+	width: 210px;
+	padding: 20px;
+	margin: 10px;
+	box-shadow: 0px 2px 6px rgba(0,0,0,0.30);
+	background-color: white;
+
+	font-family: Roboto;
+	font-size: 14px;
+	color: #222;
+
+}
+.success {
+	border-left: 4px solid green;
+}
+
+.error {
+	color: red;
+}
+
+.info {
+
+}
+
+.alert {
+
+}
+
+/*
+	Blocs principaux
+*/
+
+.left {
+	position: fixed;
+	top: 0; left: 0;
+
+	width: 240px;
+	height: 100vh;
+
+	background-color: white;
+
+	border-right: 1px solid #DBDBDB;
+
+	z-index: 200;
+}
+
+header {
+	border-bottom: 1px solid #DBDBDB;
+	height: 64px;
+
+	text-align: left;
+}
+
+header a {
+	display: block;
+	padding-left: 20px;
+	line-height: 64px;
+
+	font-family: Roboto;
+	font-weight: 100;
+	font-size: 30px;
+	color: #2196F3;
+	text-decoration: none;
+}
+
+nav {
+	padding-top: 25px;
+}
+
+nav ul {
+	margin-left: 20px;
+}
+
+nav .nav-link {
+	display: block;
+	font-family: Roboto;
+	font-weight: normal;
+	font-size: 24px;
+	color: #C0C0C0;
+	text-decoration: none;
+
+	margin-bottom: 5px;
+
+	transition: all 0.3s;
+}
+
+nav .nav-link:hover {
+	color: #222;
+}
+
+nav .nav-link-active {
+	color: #222;
+}
+
+footer {
+	position: absolute;
+	bottom: 0; left: 0;
+
+	width: 100%;
+
+	height: 64px;
+
+	border-top: 1px solid #DBDBDB; 
+}
+
+footer a {
+	display: block;
+	padding-left: 20px;
+	line-height: 64px;
+
+	font-family: Roboto;
+	font-weight: 100;
+	font-size: 30px;
+	color: #C0C0C0;
+	text-decoration: none;
+}
+
+.top {
+	position: fixed;
+	left: 0; right: 0px;
+	height: 65px;
+	padding-left: 240px;
+
+	background-color: #2196F3;
+	box-shadow: 0px 2px 6px rgba(0,0,0,0.30);
+
+	z-index: 100;
+}
+
+.top .title {
+	width: 300px;
+	float: left;
+	font-family: Roboto;
+	font-size: 32px;
+	color: white;
+	margin-left: 20px;
+
+	line-height: 65px;
+}
+
+.content {
+	padding-left: 240px;
+	padding-top: 85px;
+}
+
+
+/*
+	Dashboard
+*/
+
+.dashboard-block {
+	width: 50%;
+	height: 35vh;
+	/*background-color: red;*/
+	float: left;
+	margin-bottom: 80px;
+}
+
+.dashboard-subblock {
+	margin-left: 40px; margin-right: 40px;
+	padding: 20px;
+	height: 100%;
+	overflow: hidden;
+
+	/*background-color: blue;*/
+}
+
+.dashboard-num {
+	display: block;
+
+	font-family: Roboto;
+	font-size: 60px;
+
+	color: white;
+}
+
+.dashboard-name {
+	display: block;
+
+	font-family: Roboto;
+	font-size: 35px;
+
+	color: white;
+}
+
+/*
+	Tableaux
+*/
+
+.content-table {
+	box-shadow: 0px 2px 6px rgba(0,0,0,0.30);
+	width: 90%;
+	margin: auto;
+	margin-top: 5px; margin-bottom: 5px;
+}
+
+.table th {
+	background-color: #EEEEEE;
+	color: black;
+	text-align: left;
+	padding: 5px;
+	padding-top: 10px; padding-bottom: 10px;
+
+	font-family: Roboto;
+	/*font-weight: 100;*/
+	font-size: 18px;
+}
+
+.table td {
+	padding: 5px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+
+	border-bottom: 1px solid #E3E3E3;
+
+	font-family: Roboto;
+	font-size: 14px;
+}
+
+.edition {
+	color: #2196F3;
+	cursor: pointer;
+	text-transform: uppercase;
+	font-family: Roboto;
+	font-size: 14px;
+}
+
+
+/*
+	Module recherche
+*/
+.research-form {
+	float: right;
+}
+
+.search-bar {
+	
+
+	line-height: 65px;
+	height: 25px; width: 90px;
+	margin-top: 20px; margin-right: 20px;
+	padding-left: 10px; padding-right: 10px;
+
+	font-family: Roboto;
+	font-size: 14px;
+	color: black;
+
+	transition: width 0.3s;
+}
+
+.search-bar::-webkit-input-placeholder {
+   color: black;
+}
+
+.search-bar:-moz-placeholder { /* Firefox 18- */
+   color: black;
+}
+
+.search-bar::-moz-placeholder {  /* Firefox 19+ */
+   color: black;
+}
+
+.search-bar:-ms-input-placeholder {
+   color: black;
+}
+
+.search-bar:focus {
+	width: 300px;
+}
+
+.search-bar-open {
+	width: 300px;
+}
+
+.search-results {
+	position: fixed; right: 20px; top: 50px;
+	width: 320px;
+	/*padding: 10px;*/
+
+	background-color: white;
+	box-shadow: 0px 2px 6px rgba(0,0,0,0.30);
+
+	z-index: 500;	
+
+	display: none;
+}
+
+.show-results {
+	display: block;
+}
+
+.search-results p {
+	border-bottom: 1px solid #E3E3E3;
+	padding-bottom: 5px; padding-top: 5px;
+	padding-left: 10px; padding-right: 10px;
+
+	font-size: 14px;
+	font-family: Roboto;
+
+	cursor: pointer;
+
+	transition: all 0.3s;
+}
+
+.search-results p:hover {
+	background-color: #F5F5F5;
+}
+
+.results-type {
+	font-family: Roboto;
+	font-size: 12px;
+	color: #2196F3;
+	text-transform: uppercase;
+}
+
+.selected-result {
+	background-color: #F5F5F5;
+}
+
+.editTop {
+	height: 65px;
+	border-bottom: 1px solid #DBDBDB;
+	margin-bottom: 20px;
+}
+
+.editTop h2 {
+	font-family: Roboto;
+	font-size: 32px;
+	color: #222;
+	margin: 20px;
+	margin-bottom: 10px;
+	float: left;
+}
+
+.editionMiniTitle {
+	font-family: Roboto;
+	font-size: 26px;
+	color: #222;
+	margin: 20px;
+}
+
+.editClose {
+	float: right;
+	display: block;
+	height: 65px;
+	line-height: 65px;
+
+	padding-left: 20px;
+	padding-right: 20px;
+
+	font-family: Roboto;
+	font-weight: 100;
+	font-size: 32px;
+	color: #C0C0C0;
+	text-decoration: none;
+}
+
+.dateInscription {
+	font-family: Roboto;
+	font-size: 14px;
+	color: #C0C0C0;
+	margin-left: 21px;
+	margin-bottom: 20px; 
+}
+
+
+/* Formulaire */
+.formUsers {
+	position: relative;
+	width: 500px;
+	margin-left: 20px;
+}
+
+
+.formDouble {
+	display: block;
+	outline: none;
+	border: 1px solid #2196F3;
+	margin-bottom: 10px;
+	padding: 10px;
+	font-size: 14px;
+	font-family: Roboto;
+	float: left;
+	width: 218px;
+}
+
+.formDouble:first-child {
+	margin-right: 20px;
+}
+
+.formSimple {
+	display: block;
+	outline: none;
+	border: 1px solid #2196F3;
+	margin-bottom: 10px;
+	padding: 10px;
+	font-size: 14px;
+	font-family: Roboto;
+	width: 478px;
+	float: left;
+}
+
+.formAdress {
+	margin-top: 20px;
+}
+
+.formCodePostal,.formVille {
+	display: block;
+	outline: none;
+	border: 1px solid #2196F3;
+	margin-bottom: 10px;
+	padding: 10px;
+	font-size: 14px;
+	font-family: Roboto;
+	float: left;
+}
+
+.formCodePostal {
+	width: 118px;
+	margin-right: 20px;
+}
+.formVille {
+	width: 318px;
+}
+
+.buttonForm {
+	display: inline-block;
+	text-align: center;
+
+
+	min-width: 64px;
+	min-height: 36px;
+	padding: 8px;
+	margin-top: 20px;
+
+	font-family: Roboto;
+	font-size: 16px;
+	color: white;
+
+	background-color: #2196F3;
+	border-radius: 2px;
+
+	transition: all 0.3s;
+}
+
+.buttonForm:hover, .buttonForm:focus {
+	background-color: #45A6F5;
+}
+
+.buttonFormRed {
+	background-color: #FF4304;
+}
+
+.buttonFormRed:hover, .buttonFormRed:focus {
+	background-color: #FF632F;
+}

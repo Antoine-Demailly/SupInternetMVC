@@ -1,12 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: nico
- * Date: 23/04/2015
- * Time: 23:45
- */
 
-namespace Website\Controller;
+namespace WebSite\Controller;
+
+use WebSite\Model\MessageFlash;
+use WebSite\Model\UserManager;
 
 /**
  * Class UserController
@@ -15,131 +12,181 @@ namespace Website\Controller;
  *
  * @package Website\Controller
  */
-class UserController {
+
+
+class UserController extends AbstractBaseController {
 
     /**
      * Recup all users and print it
      *
      * @return array
      */
-    public function listUserAction($request) {
-        //Use Doctrine DBAL here
 
-        /*****/
-        $config = new \Doctrine\DBAL\Configuration();
-
-
-        //for this array use config_dev.yml and YamlComponents
-        // http://symfony.com/fr/doc/current/components/yaml/introduction.html
-        $connectionParams = array(
-            'dbname' => 'mydb',
-            'user' => 'user',
-            'password' => 'secret',
-            'host' => 'localhost',
-            'driver' => 'pdo_mysql',
-        );
-        
-        $conn = \Doctrine\DBAL\DriverManager::getConnection($connectionParams, $config);
-
-        // http://docs.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/data-retrieval-and-manipulation.html
-        // it's much better if you use QueryBuilder : http://docs.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/query-builder.html
-        $statement = $conn->prepare('SELECT * FROM user');
-
-
-        $statement->execute();
-        $users = $statement->fetchAll();
-/******/     
-
-        //you can return a Response object
-        return [
-            'view' => 'WebSite/View/user/listUser.html.php', // should be Twig : 'WebSite/View/user/listUser.html.twig'
-            'users' => $users
-        ];
-    }
-
-
-    /**
-     * swho one user thanks to his id : &id=...
-     *
-     * @return array
-     */
-    public function showUserAction($request) {
-        //Use Doctrine DBAL here
-
-        $user = ...
-
-        //you can return a Response object
-        return [
-            'view' => 'WebSite/View/user/showUser.html.php', // should be Twig : 'WebSite/View/user/listUser.html.twig'
-            'user' => $user
-        ];
-    }
-
-    /**
-     * Add User and redirect on listUser after
-     */
+    
     public function addUser($request) {
-        //Use Doctrine DBAL here
+        if ($request['request']) { 
 
+            if (isset($request['request']['email']) && isset($request['request']['password'])) {
+                
+                $userManager = new UserManager($this->getConnection());
+                $register = $userManager->addUser($request['request']['email'],$request['request']['password']);
 
-        if ($request['request']) { //if POST
-            //handle form with DBAL
-            //...
+                if ($register == true) { 
+                    $userId = $userManager->getIdUser($request['request']['email']);
+                    if (!empty($userId)) {
+                        $_SESSION['id'] = $userId;
+                        $_SESSION['email'] = $request['request']['email'];
+                        MessageFlash::addMessageFlash('success', 'Inscription réussie');
+                        return [
+                            'redirect_to' => $this->router->generateUrl('home')
+                        ];
+                    }
+                } else {
+                    MessageFlash::addMessageFlash('error', 'Nom d\'utilisateur déjà utilisé');
+                    return [
+                        'redirect_to' => $this->router->generateUrl('home')
+                    ];
+                }
+            } 
 
-            //Redirect to show
-            //you should return a RedirectResponse object
-            return [
-                'redirect_to' => 'http://.......',// => manage it in index.php !! URL should be generate by Routing functions thanks to routing config
-
-            ];
         }
 
-
-        //you should return a Response object
+        MessageFlash::addMessageFlash('error', 'Une erreur s\'est produite');
         return [
-            'view' => 'WebSite/View/user/addUser.html.php',// => create the file
-            'user' => $user
+            'redirect_to' => $this->router->generateUrl('home')
         ];
     }
 
 
-    /**
-     * Delete User and redirect on listUser after
-     */
+    // Update User With Ajax
+    public function updateUser($request) {
+        
+        $errors = 0;
+
+        if (!empty($request['request'])) {
+
+            $sent = $request['request'];
+
+            if (!empty($sent['id'])) {
+                // Check if is int
+            } else { $errors++; }
+
+            if (!empty($sent['prenom'])) {
+                $sent['prenom'] = stripcslashes($sent['prenom']);
+            } else { $errors++; }
+
+            if (!empty($sent['nom'])) {
+                $sent['nom'] = stripcslashes($sent['nom']);
+            } else { $errors++; }
+
+            if (!empty($sent['email'])) {
+                $sent['email'] = stripcslashes($sent['email']);
+            } else { $errors++; }
+
+            if (!empty($sent['adresse'])) {
+                $sent['adresse'] = stripcslashes($sent['adresse']);
+            } else { $errors++; }
+
+            if (!empty($sent['ville'])) {
+                $sent['ville'] = stripcslashes($sent['ville']);
+            } else { $errors++; }
+
+            if (!empty($sent['code_postal'])) {
+                $sent['code_postal'] = stripcslashes($sent['code_postal']);
+            } else { $errors++; }
+
+            if ($errors === 0) {
+
+                $userManager = new UserManager($this->getConnection());
+                $update = $userManager->updateUser($sent);
+
+                if ($update) {
+                    return ['json' => 'Utilisateur mis à jour.'];
+                } else {
+                    http_response_code(400);
+                    return ['json' => 'Utilisateur non mis à jour !'];
+                }
+
+            } else {
+                http_response_code(400);
+                return ['json' => 'Il y a des erreurs avec le formulaire.'];
+            }
+
+
+        }
+
+    }
+
+    // Get User With Ajax
+    public function getUser($request) {
+
+        if (!empty($_GET['table']) && !empty($_GET['id_item'])) {
+            if ($_GET['table'] == 'users') {
+                $userManager = new UserManager($this->getConnection());
+                $user = $userManager->getUser($_GET['id_item']);
+
+                if ($user) {
+                    return ['json' => $user];
+                } else {
+                    http_response_code(400);
+                    return ['json' => 'Une erreur s\'est produite'];
+                }
+
+            }
+        } else {
+            http_response_code(400);
+            return ['json' => 'Aucune données n\'a été reçu par le serveur'];
+        }
+
+    }
+
+
+    
     public function deleteUser($request) {
-        //Use Doctrine DBAL here
-
-
-
-        //you should return a RedirectResponse object , redirect to list
         return [
-            'redirect_to' => 'http://.......',// => manage it in index.php !! URL should be generate by Routing functions thanks to routing config
+            'redirect_to' => 'http://.......',
 
         ];
     }
 
-    /**
-     * Log User (Session) , add session in $request first (index.php)
-     */
-    public function logUser($request) {
-        if ($request['request']) { //if POST
-            //handle form with DBAL
-            //...
+    public function logoutUser($request) {
+        
+        session_unset();
+        session_destroy();
+        $_SESSION = null;
 
+        return [
+            'redirect_to' => $this->router->generateUrl('home'),
+        ];
+    }
+
+    public function loginUser($request) {
+        if ($request['request']) { 
+
+            if (isset($request['request']['email']) && isset($request['request']['password'])) {
+                
+                $userManager = new UserManager($this->getConnection());
+                $user = $userManager->connect($request['request']['email'],$request['request']['password']);
+
+                if (!empty($user['id'])) { 
+                    $_SESSION['id'] = $user['id'];
+                    $_SESSION['prenom'] = $user['prenom'];
+                    $_SESSION['nom'] = $user['nom'];
+                    $_SESSION['email'] = $user['email'];
+
+                    $message = 'Vous êtes connecté en tant que:<br>'.$_SESSION['prenom'].' '.$user['nom'];
+                    MessageFlash::addMessageFlash('success',$message);
+                    return [
+                        'redirect_to' => $this->router->generateUrl('dashboard')
+                    ];
+                }
+            }    
 
         }
 
-
-        //take FlashBag system from
-        // https://github.com/NicolasBadey/SupInternetTweeter/blob/master/model/functions.php
-        // line 87 : https://github.com/NicolasBadey/SupInternetTweeter/blob/master/index.php
-        // and manage error and success
-
-        //Redirect to list or home
-        //you should return a RedirectResponse object
+        MessageFlash::addMessageFlash('error', 'Nom d\'utilisateur ou mot de passe incorrect.');
         return [
-            'redirect_to' => 'http://.......',// => manage it in index.php !! URL should be generate by Routing functions thanks to routing config
-
+            'redirect_to' => $this->router->generateUrl('home')
         ];
 
     }
