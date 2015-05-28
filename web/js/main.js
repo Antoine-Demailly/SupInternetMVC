@@ -162,7 +162,6 @@ function modeEdition(elem) {
 
     var sent = {table: mode, id_item: id};
 
-
     // Première étape: On ouvre le panneau d'édition
     $('.fog').fadeIn(400);
     $('.main-content').addClass('mode-absolute');
