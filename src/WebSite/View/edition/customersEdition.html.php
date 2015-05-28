@@ -19,3 +19,77 @@
 <p id="resultsUsers" style="margin: 20px;"></p>
 
 <h3 class="editionMiniTitle">Dernières sessions</h3>
+
+<script type="text/javascript">
+    $('#usersPrenom').change(function(){
+        var e = $(this);
+        var val = e.val();
+        if (val.length < 2) {
+            e.removeClass('inputGreen');
+            e.addClass('inputRed');
+        } else {
+            e.removeClass('inputRed');
+            e.addClass('inputGreen');
+        }
+    });
+    $('#usersNom').change(function(){
+        var e = $(this);
+        var val = e.val();
+        if (val.length < 2) {
+            e.removeClass('inputGreen');
+            e.addClass('inputRed');
+        } else {
+            e.removeClass('inputRed');
+            e.addClass('inputGreen');
+        }
+    });
+    $('#usersEmail').change(function(){
+        var e = $(this);
+        var val = e.val();
+        var r = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+        if (r.test(val)) {
+            e.removeClass('inputRed');
+            e.addClass('inputGreen');
+        } else {
+            e.removeClass('inputGreen');
+            e.addClass('inputRed');
+        }
+    });
+
+    $('#usersAdresse').change(function(){
+        var e = $(this);
+        var val = e.val();
+        if (val.length < 10) {
+            e.removeClass('inputGreen');
+            e.addClass('inputRed');
+        } else {
+            e.removeClass('inputRed');
+            e.addClass('inputGreen');
+        }
+    });
+
+    $('#usersVille').change(function(){
+        var e = $(this);
+        var val = e.val();
+        if (val.length < 2) {
+            e.removeClass('inputGreen');
+            e.addClass('inputRed');
+        } else {
+            e.removeClass('inputRed');
+            e.addClass('inputGreen');
+        }
+    });
+
+    $('#usersCodePostal').change(function(){
+        var e = $(this);
+        var val = e.val();
+        if ($.isNumeric(val)) {
+            e.removeClass('inputRed');
+            e.addClass('inputGreen');
+        } else {
+            e.removeClass('inputGreen');
+            e.addClass('inputRed');
+        }
+    });
+
+</script>

@@ -4,6 +4,7 @@ namespace WebSite\Controller;
 
 use WebSite\Model\MessageFlash;
 use WebSite\Model\ScootersInBornes;
+use WebSite\Model\BornesAdminManager;
 
 
 
@@ -14,11 +15,16 @@ class BornesController extends AbstractBaseController {
             if (!empty($request['query']['id'])) {
                 
                 $scootersBornes = new ScootersInBornes($this->getConnection());
-                $results = $scootersBornes->getScooters($request['query']['id']);
+                $results['scooters'] = $scootersBornes->getScooters($request['query']['id']);
                 
+                $bornes = new BornesAdminManager($this->getConnection());
+                $results['bornes'] = $bornes->getBornesById($request['query']['id']);
+
                 return [
                 'html_view' => 'WebSite/View/edition/bornesEdition.html.php',
-                'bornes' => $results];
+                'scooters' => $results['scooters'],
+                'bornes' => $results['bornes']
+                ];
 
             } else {
                 http_response_code(400);

@@ -51,6 +51,7 @@ $(function() {
         return false;
     });
 
+
 });
 
 
@@ -88,8 +89,8 @@ function mysearch() {
                 for (var e in response) {
                     if (response[e].nom_champ == 'email' || response[e].nom_champ == 'utilisateur') {
                         var mode = 'users'; 
-                    } else if (response[e].nom_champ == 'ville'){
-                        var mode = 'city';
+                    } else if (response[e].nom_champ == 'bornes'){
+                        var mode = 'bornes';
                     } else if (response[e].nom_champ == 'trottinette') {
                         var mode = 'scooters';
                     }
@@ -170,15 +171,10 @@ function modeEdition(elem) {
     // Deuxième étape: Récupération vue et injection contenu
     if (mode == 'users') {
         getCustomersEdition(sent,id);
-    } else if (mode == 'city') {
-        getCityEdition();
     } else if (mode =='scooters') {
         getScootersEdition(id);
     } else if (mode == 'bornes') {
-        var latitude = $(elem).attr("latitude");
-        var longitude = $(elem).attr("longitude");
-        var name = $(elem).attr("localisation");
-        getBornesEdition(latitude,longitude,name,id);
+        getBornesEdition(id);
     }
 
 }
@@ -207,15 +203,6 @@ function modeEdition(elem) {
 
     }
 
-    function getCityEdition(sent) {
-        $.get('../src/WebSite/View/edition/cityEdition.html.php', function(data) {
-            $('.editView').html(data);
-        });
-
-        $('.editionTitle').html('Edition - Liste des villes');
-
-    }
-
     function getScootersEdition(id_item) {
 
         var sent = {id: id_item}
@@ -237,7 +224,7 @@ function modeEdition(elem) {
 
     }
 
-    function getBornesEdition(latitude,longitude,name,id_item) {
+    function getBornesEdition(id_item) {
             
 
             var sent = {id: id_item};
@@ -249,8 +236,6 @@ function modeEdition(elem) {
                     dataType : 'html',
                     success : function(response) {
                         $('.editionMode').html(response);
-                        $('.editionTitle').html('Bornes - '+name);
-                        initialize(latitude,longitude);
                     },
                     error : function(d) {
                         $('.editionMode').html('Une erreur s\'est produite');

@@ -20,4 +20,17 @@ class BornesAdminManager {
 		}
 		return false;
 	}
+
+	public function getBornesById($id) {
+		$request = $this->_conn->prepare('SELECT  * FROM bornes WHERE id = :id;');
+		$request->execute([
+				'id' => $id
+			]);
+		$result = $request->fetch();
+
+		if (!empty($result)) {
+			return $result;
+		}
+		return false;
+	}
 }

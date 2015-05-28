@@ -477,6 +477,7 @@ footer a {
 	font-family: Roboto;
 	float: left;
 	width: 218px;
+	transition: all 0.3s;
 }
 
 .formDouble:first-child {
@@ -493,6 +494,7 @@ footer a {
 	font-family: Roboto;
 	width: 478px;
 	float: left;
+	transition: all 0.3s;
 }
 
 .formAdress {
@@ -548,4 +550,14 @@ footer a {
 
 .buttonFormRed:hover, .buttonFormRed:focus {
 	background-color: #FF632F;
+}
+
+.inputRed {
+	background-color: #FFEBEE;
+	border-color: red;
+}
+
+.inputGreen {
+	background-color: #E8F5E9;
+	border-color: green;
 }
