@@ -18,6 +18,9 @@
 </form>
 <p id="resultsUsers" style="margin: 20px;"></p>
 
+<div class="currentAbo">
+    
+</div>
 <h3 class="editionMiniTitle">Dernières sessions</h3>
 
 <script type="text/javascript">
