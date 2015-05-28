@@ -13,11 +13,14 @@ class ScootersController extends AbstractBaseController {
         
             if (!empty($request['query']['id'])) {
                 
-
                 $scooters = new Scooters($this->getConnection());
                 $results = $scooters->getScooters($request['query']['id']);
                 
-                return ['json' => $results]; 
+                return [
+                'html_view' => 'WebSite/View/edition/scootersEdition.html.php',
+                'scooters' => $results['scooters'],
+                'bornes' => $results['bornes']
+                ]; 
 
             } else {
                 http_response_code(400);

@@ -1,5 +1,6 @@
 /vendor/
 /var/cache/*
 /var/log/*
+/app/cache/*
 .DS_Store
 .idea

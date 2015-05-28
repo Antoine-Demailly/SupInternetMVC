@@ -122,20 +122,24 @@ class UserController extends AbstractBaseController {
 
         if (!empty($_GET['table']) && !empty($_GET['id_item'])) {
             if ($_GET['table'] == 'users') {
+
+
                 $userManager = new UserManager($this->getConnection());
                 $user = $userManager->getUser($_GET['id_item']);
 
                 if ($user) {
-                    return ['json' => $user];
+                    return [
+                    'html_view' => 'WebSite/View/edition/customersEdition.html.php',
+                    'user' => $user];
                 } else {
                     http_response_code(400);
-                    return ['json' => 'Une erreur s\'est produite'];
+                    return ['error' => 'Une erreur s\'est produite'];
                 }
 
             }
         } else {
             http_response_code(400);
-            return ['json' => 'Aucune données n\'a été reçu par le serveur'];
+            return ['error' => 'Aucune données n\'a été reçu par le serveur'];
         }
 
     }

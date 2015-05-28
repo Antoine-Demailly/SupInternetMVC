@@ -13,8 +13,7 @@ $(function() {
     // On initialise le plugins des onglets
     $('#CustomersTab').tabJs();
 
-    $('.editClose').click(function() {
-
+    $("body").on("click",".editClose", function() {
         $('#search-bar').focus();
         $('.editionMode').removeClass('editionMode-open');
         $('.main-content').removeClass('mode-absolute');
@@ -190,39 +189,21 @@ function modeEdition(elem) {
     // 
 
     function getCustomersEdition(sent,id) {
-        $.get('../src/WebSite/View/edition/customersEdition.html.php', function(data) {
-            
-        }).then(function(value){
-            $('.editView').html(value);
+
             $.ajax({
                 url : 'index.php?p=getuser',
                 type : 'GET',
                 data : sent,
-                dataType : 'json',
+                dataType : 'html',
                 success : function(response) {
-                    console.log(response);
-                    $('.editionTitle').html('Edition - '+response.prenom+' '+response.nom).attr("iditem",id);
-
-
-                    $('#usersDateInscription').html('Inscrit le '+response.date_inscription);
-
-                    $('#usersPrenom').val(response.prenom);
-                    $('#usersNom').val(response.nom);
-                    $('#usersEmail').val(response.email);
-                    $('#usersAdresse').val(response.adresse);
-                    $('#usersCodePostal').val(response.code_postal);
-                    $('#usersVille').val(response.ville);
-
+                    $('.editionMode').html(response);
                 },
                 error : function(d) {
-
-                    $('.editionTitle').html('Edition - Utilisateur inconnu');
-                    // $('.editView').html('');
-
+                    $('.editionMode').html('Edition - Utilisateur inconnu');
                 }
 
             });
-        });
+
 
     }
 
@@ -236,70 +217,45 @@ function modeEdition(elem) {
     }
 
     function getScootersEdition(id_item) {
-        var title;
-        var latitude; var longitude;
+
         var sent = {id: id_item}
-        $.get('../src/WebSite/View/edition/scootersEdition.html.php', function(data) {
-            $('.editView').html(data);
-        }).then(function(value) {
+        
             $.ajax({
                 url : 'index.php?p=getscooters',
                 type : 'GET',
                 data : sent,
-                dataType : 'json',
+                dataType : 'html',
                 success : function(response) {
-                    title = response.scooters.numero;
-                    latitude = response.bornes.latitude;
-                    longitude = response.bornes.longitude;
-
-                    $('.editionTitle').html('Edition - Trottinettes '+title);
-                    initialize(latitude,longitude);
+                    $('.editionMode').html(response);
                 },
                 error : function(d) {
-                    $('.editionTitle').html('Edition - Trottinettes inexistante');
+                    $('.editionMode').html('Edition - Trottinettes inexistante');
                 }
             });
 
             $('body').scrollTop(0);
-        });
 
     }
 
     function getBornesEdition(latitude,longitude,name,id_item) {
-        $.get('../src/WebSite/View/edition/bornesEdition.html.php', function(data) {
-            $('.editView').html(data);
-            // Init map
-            initialize(latitude,longitude);
-        }).then(function(value) {
-            $('.editionTitle').html('Bornes - '+name);
+            
 
             var sent = {id: id_item};
             
-
             $.ajax({
                     url : 'index.php?p=scootersinbornes',
                     type : 'GET',
                     data : sent,
-                    dataType : 'json',
+                    dataType : 'html',
                     success : function(response) {
-                        $('#nombreScooters').html(response.length);
-                        var scooters = $('#listScootersInBornes');
-                        scooters.html('');
-                        for (e in response) {   
-                            scooters.append('<p style="margin: 20px;">'+response[e].numero+' - <span onclick="modeEdition(this);" editionmode="scooters" editionid="'+response[e].id+'" class="edition">Voir</span></p>');
-                        }
-
+                        $('.editionMode').html(response);
+                        $('.editionTitle').html('Bornes - '+name);
+                        initialize(latitude,longitude);
                     },
                     error : function(d) {
-                        var scooters = $('#listScootersInBornes');
-                        scooters.html('Pas de contenu à afficher');
-
+                        $('.editionMode').html('Une erreur s\'est produite');
                     }
-
-            });
-        });
-
-        
+            });        
 
     }
 

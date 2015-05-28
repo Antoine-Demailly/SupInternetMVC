@@ -13,11 +13,12 @@ class BornesController extends AbstractBaseController {
         
             if (!empty($request['query']['id'])) {
                 
-
                 $scootersBornes = new ScootersInBornes($this->getConnection());
                 $results = $scootersBornes->getScooters($request['query']['id']);
                 
-                return ['json' => $results]; 
+                return [
+                'html_view' => 'WebSite/View/edition/bornesEdition.html.php',
+                'bornes' => $results];
 
             } else {
                 http_response_code(400);

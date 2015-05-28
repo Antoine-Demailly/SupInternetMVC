@@ -83,7 +83,7 @@ class UserManager {
 	}
 
 	public function getUser($id) {
-		$statement = $this->_conn->prepare('SELECT prenom,nom,email,adresse,code_postal,ville,date_inscription FROM users WHERE id = :id');
+		$statement = $this->_conn->prepare('SELECT id,prenom,nom,email,adresse,code_postal,ville,date_inscription FROM users WHERE id = :id');
         $statement->execute([
             ':id' => $id,
         ]);
